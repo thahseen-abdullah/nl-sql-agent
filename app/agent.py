@@ -1,7 +1,7 @@
 from app.sql_executor import execute_query
 from app.sql_validator import validate_sql
 from app.schema_inspector import get_columns, format_schema, schema_to_text
-from app.llm import generate_sql, correct_sql
+from app.llm import generate_sql, correct_sql, interpret_results
 
 
 def execute_generated_sql(sql):
@@ -20,7 +20,6 @@ def ask_database(question):
 
     try:
         results = execute_generated_sql(sql)
-        return results
 
     except Exception as error:
         print("First SQL attempt failed:")
@@ -37,5 +36,11 @@ def ask_database(question):
         print(corrected_sql)
 
         results = execute_generated_sql(corrected_sql)
+        sql = corrected_sql
 
-        return results
+    answer = interpret_results(question, results)
+
+    return {
+        "answer": answer,
+        "sql": sql
+    }

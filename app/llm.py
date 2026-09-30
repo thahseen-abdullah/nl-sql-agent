@@ -64,3 +64,25 @@ Rules:
 """
 
     return ask_llm(prompt)
+
+
+def interpret_results(question, results):
+    prompt = f"""
+You are a database answer assistant.
+
+Answer the user's question using the database results provided.
+
+User question:
+{question}
+
+Database results:
+{results}
+
+Rules:
+- Answer directly and clearly.
+- Do not invent information.
+- Use only the provided database results.
+- If the results are empty, say that no matching records were found.
+"""
+
+    return ask_llm(prompt)
